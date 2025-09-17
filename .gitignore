@@ -3,3 +3,4 @@
 ./vagrant
 **/token
 **/*.log
+**/*.swp
