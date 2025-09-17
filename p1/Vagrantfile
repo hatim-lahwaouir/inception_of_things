@@ -15,10 +15,9 @@ SERVICES = {
 }
 
 Vagrant.configure("2") do |config|
-
-  config.vm.box = "ubuntu/jammy64"
-  config.vm.box_version = "20241002.0.0"
-
+  config.vm.box = "cloud-image/alpine-3.21"
+  config.vm.box_version = "3.21.2-r0"
+  
   config.vm.define "hlahwaouS" do |hlahwaouS|
     hlahwaouS.vm.provider "virtualbox" do |vb|
       vb.memory = 1024 
