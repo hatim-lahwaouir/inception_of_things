@@ -1,0 +1,28 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: app-ingress 
+spec:
+  entryPoints:
+    - web 
+  routes:
+    - match: Host(`app1.com`)
+      kind: Rule
+      services:
+        - name: app1
+          port: 80
+      priority: 3 
+    - match: Host(`app2.com`)
+      kind: Rule
+      services:
+        - name: app2
+          port: 80
+      priority: 2 
+
+    - match: HostRegexp(`^*$`)
+      kind: Rule
+      services:
+        - name: app3
+          port: 80
+      priority: 1 
+
