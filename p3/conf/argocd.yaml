@@ -7,7 +7,7 @@ spec:
   project: default
 
   source:
-    repoURL: https://github.com/hatim-lahwaouir/p3_depolyment 
+    repoURL: https://github.com/hatim-lahwaouir/hlahwaou_p3_depolyment 
     targetRevision: HEAD
     path: dev
   destination: 
