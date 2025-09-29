@@ -5,9 +5,6 @@ k3d cluster create p3 --api-port 6550 -p "0.0.0.0:8081:80@loadbalancer"
 # Create namespace first
 kubectl create namespace argocd
 
-kubectl apply -f ../conf/helm-chart-config.yml
-
-
 
 # Install ArgoCD
 kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
