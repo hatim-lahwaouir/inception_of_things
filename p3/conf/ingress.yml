@@ -5,20 +5,18 @@ metadata:
   namespace: argocd
 spec:
   entryPoints:
-    - websecure
+    - web
   routes:
     - kind: Rule
-      match: Host(`argocd.10.12.100.143.com`)
+      match: Host(`10.12.100.143`)
       priority: 10
       services:
         - name: argocd-server
           port: 80
     - kind: Rule
-      match: Host(`argocd.10.12.100.143.com`) && Headers(`Content-Type`, `application/grpc`)
+      match: Host(`10.12.100.143`) && Headers(`Content-Type`, `application/grpc`)
       priority: 11
       services:
         - name: argocd-server
           port: 80
           scheme: h2c
-  tls:
-    certResolver: myresolverAfter configuring everything, let’s verify that our setup is working correctly. First, check the ArgoCD server by accessing the ArgoCD UI to ensure it is running. You can get the initial password for the admin user by running kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d. Access the ArgoCD UI using the URL provided by Traefik, which should be accessible via HTTPS due to the TLS certificate provided by certResolver. Finally, make sure both HTTP and gRPC routes are correctly configured and accessible.

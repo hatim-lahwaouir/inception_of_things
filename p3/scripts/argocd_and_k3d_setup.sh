@@ -22,6 +22,13 @@ echo "All pods in argocd namespace are ready."
 # Apply the ingress route
 kubectl apply -f ../conf/ingress.yml
 kubectl apply -f ../conf/argocd-cmd-params-cm.yml
+kubectl -n argocd rollout restart deployment argocd-server
+while kubectl get pods -n argocd | grep "0/1"; do
+  echo "Waiting for pods to be ready..."
+  sleep 5
+done
+echo "All pods in argocd namespace are ready."
+kubectl apply -f ../conf/argocd.yml
 
 # Get password
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d | cat > $HOME/argocd_secret.txt
