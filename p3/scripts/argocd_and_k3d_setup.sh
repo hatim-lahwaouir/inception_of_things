@@ -22,9 +22,8 @@ done
 echo "All pods in argocd namespace are ready."
 
 
-kubectl apply -f ../conf/argocd.yaml
-kubectl apply -f ../conf/argocd.yaml  argocd-cmd-params-cm.yml
+kubectl apply -f ../conf/argocd.yml
+kubectl apply -f  ../conf/argocd-cmd-params-cm.yml
 kubectl rollout restart deployment/argocd-server -n argocd
-kubectl rollout restart ../conf/ingress.yml 
-
+kubectl apply -f  ../conf/ingress.yml
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 | cat > $HOME/argocd_secret.txt
