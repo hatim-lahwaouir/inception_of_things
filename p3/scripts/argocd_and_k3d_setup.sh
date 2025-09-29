@@ -20,12 +20,20 @@ echo "All pods in argocd namespace are ready."
 kubectl apply -f ../conf/ingress.yml
 kubectl apply -f ../conf/argocd-cmd-params-cm.yml
 kubectl -n argocd rollout restart deployment argocd-server
-while kubectl get pods -n argocd | grep "0/1"; do
+while kubectl get pods -n argocd | grep "0/1" 1>/dev/null ; do
   echo "Waiting for pods to be ready..."
   sleep 5
 done
 echo "All pods in argocd namespace are ready."
 kubectl apply -f ../conf/argocd.yml
+
+
+echo "waiting for traefik  running "
+until kubectl get pods -n kube-system | grep -E -i '^(traefik)' 1>/dev/null 2>/dev/null
+do
+    sleep 3 
+done
+
 
 # Get password
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d | cat > $HOME/argocd_secret.txt
