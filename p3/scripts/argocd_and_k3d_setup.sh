@@ -6,6 +6,7 @@
 docker -v >/dev/null 2>&1
 if [ $? -eq 0 ]; then
     echo "Docker already exists"
+    service docker start
 else
     echo "Installing Docker..."
     apk add docker
