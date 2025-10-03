@@ -1,4 +1,21 @@
-#!/bin/sh
+#!/bin/bash
+
+
+
+
+docker -v >/dev/null 2>&1
+if [ $? -eq 0 ]; then
+    echo "Docker already exists"
+else
+    echo "Installing Docker..."
+    apk add docker
+    rc-update add docker default
+    service docker start
+fi
+
+
+wget -q -O - https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
+
 k3d cluster delete p3 1>/dev/null
 k3d cluster create p3 --api-port 6550 -p "0.0.0.0:8081:80@loadbalancer"
 
