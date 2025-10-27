@@ -12,12 +12,6 @@ kubectl apply -f app3_deployment.yaml
 
 
 
-while [ ! -f /var/lib/rancher/k3s/server/manifests/traefik.yaml ]
-do
-  sleep 2 # or less like 0.2
-done
-
-
 echo "waiting for traefik  creation"
 sudo kubectl wait pod  --for=create -n kube-system -l app.kubernetes.io/name=traefik  --timeout=180s
 

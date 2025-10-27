@@ -8,13 +8,13 @@ spec:
     - web
   routes:
     - kind: Rule
-      match: Host(`10.12.100.134`)
+      match: Host(`10.12.100.104`)
       priority: 10
       services:
         - name: argocd-server
           port: 80
     - kind: Rule
-      match: Host(`10.12.100.134`) && Headers(`Content-Type`, `application/grpc`)
+      match: Host(`10.12.100.104`) && Headers(`Content-Type`, `application/grpc`)
       priority: 11
       services:
         - name: argocd-server
