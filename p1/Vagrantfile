@@ -1,10 +1,6 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-# All Vagrant configuration is done below. The "2" in Vagrant.configure
-# configures the configuration version (we support older styles for
-# backwards compatibility). Please don't change it unless you know what
-# you're doing.
 SERVICES = {
   'server' => {
     ip: '192.168.56.110'
@@ -14,36 +10,97 @@ SERVICES = {
   }
 }
 
+# All Vagrant configuration is done below. The "2" in Vagrant.configure
+# configures the configuration version (we support older styles for
+# backwards compatibility). Please don't change it unless you know what
+# you're doing.
 Vagrant.configure("2") do |config|
-  config.vm.box = "boxen/alpine-3.22"
-  config.vm.box_version = "2025.08.20.12"  
+  # The most common configuration options are documented and commented below.
+  # For a complete reference, please see the online documentation at
+  # https://docs.vagrantup.com.
 
+  # Every Vagrant development environment requires a box. You can search for
+  # boxes at https://vagrantcloud.com/search.
+  config.vm.box = "boxen/alpine-3.22"
+  config.vm.box_version = "2025.08.20.12"
+
+  # Disable automatic box update checking. If you disable this, then
+  # boxes will only be checked for updates when the user runs
+  # `vagrant box outdated`. This is not recommended.
+  # config.vm.box_check_update = false
+
+  # Create a forwarded port mapping which allows access to a specific port
+  # within the machine from a port on the host machine. In the example below,
+  # accessing "localhost:8080" will access port 80 on the guest machine.
+  # NOTE: This will enable public access to the opened port
+  # config.vm.network "forwarded_port", guest: 80, host: 8080
+
+  # Create a forwarded port mapping which allows access to a specific port
+  # within the machine from a port on the host machine and only allow access
+  # via 127.0.0.1 to disable public access
+  # config.vm.network "forwarded_port", guest: 80, host: 8080, host_ip: "127.0.0.1"
+
+  # Create a private network, which allows host-only access to the machine
+  # using a specific IP.
+  # config.vm.network "private_network", ip: "192.168.33.10"
+
+  # Create a public network, which generally matched to bridged network.
+  # Bridged networks make the machine appear as another physical device on
+  # your network.
+  # config.vm.network "public_network"
+
+  # Share an additional folder to the guest VM. The first argument is
+  # the path on the host to the actual folder. The second argument is
+  # the path on the guest to mount the folder. And the optional third
+  # argument is a set of non-required options.
+  # config.vm.synced_folder "../data", "/vagrant_data"
+
+  # --- Server (Master node)
   config.vm.define "hlahwaouS" do |hlahwaouS|
     hlahwaouS.vm.provider "virtualbox" do |vb|
-      vb.memory = 1024 
-      vb.cpus = 1 
+      vb.memory = 1024
+      vb.cpus = 1
       vb.name =  "hlahwaou1"
     end
 
     hlahwaouS.vm.hostname = "hlahwaouS"
     hlahwaouS.vm.network "private_network", ip: SERVICES['server'][:ip]
+
+    # Disable the default share of the current code directory. Doing this
+    # provides improved isolation between the vagrant box and your host
+    # by making sure your Vagrantfile isn't accessible to the vagrant box.
+    # If you use this you may want to enable additional shared subfolders as
+    # shown above.
     hlahwaouS.vm.synced_folder "conf", "/home/vagrant/conf", create: true
 
+    # Enable provisioning with a shell script. Additional provisioners such as
+    # Ansible, Chef, Docker, Puppet and Salt are also available. Please see the
+    # documentation for more information about their specific syntax and use.
     hlahwaouS.vm.provision "shell", name: "setup-master", path: "scripts/setup_master.sh", args: [SERVICES['server'][:ip]]
   
-  end 
+  end
 
+  # --- Worker node
   config.vm.define "hlahwaouSW" do |hlahwaouSW|
     hlahwaouSW.vm.provider "virtualbox" do |vb|
       vb.memory = 1024 
       vb.cpus = 1 
       vb.name =  "hlahwaou2"
-    end 
+    end
 
     hlahwaouSW.vm.hostname = "hlahwaouSW"
     hlahwaouSW.vm.network "private_network", ip: SERVICES['server_worker'][:ip]
+
+    # Disable the default share of the current code directory. Doing this
+    # provides improved isolation between the vagrant box and your host
+    # by making sure your Vagrantfile isn't accessible to the vagrant box.
+    # If you use this you may want to enable additional shared subfolders as
+    # shown above.
     hlahwaouSW.vm.synced_folder "conf", "/home/vagrant/conf", create: true
 
+    # Enable provisioning with a shell script. Additional provisioners such as
+    # Ansible, Chef, Docker, Puppet and Salt are also available. Please see the
+    # documentation for more information about their specific syntax and use.
     hlahwaouSW.vm.provision "shell", name: "setup-agent", path: "scripts/setup_agent.sh", args: [SERVICES['server'][:ip], SERVICES['server_worker'][:ip]]
 
   end
